@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1060621772973",
+    "project_id": "tutorhub-345106",
+    "storage_bucket": "tutorhub-345106.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060621772973:android:646faa4c0055c399a9be24",
+        "android_client_info": {
+          "package_name": "com.tutorhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060621772973-t5rkri716lh4r73a5t1cu2etribekpl6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tutorhub",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1060621772973-7t2feq1j454br2ve5r0qs92k7dl2i7mb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAli1pK2yfgVa_soWvTm392zGPxtYU07SE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060621772973-7t2feq1j454br2ve5r0qs92k7dl2i7mb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
