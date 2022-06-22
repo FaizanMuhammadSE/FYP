@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react';
-import {Text} from 'react-native';
+import {Text, View, ActivityIndicator} from 'react-native';
 import ResultComponent from '../notifications/components/index.js';
 import {NotificationsContext} from '../../Context/index.js';
 import auth from '@react-native-firebase/auth';
@@ -11,6 +11,7 @@ const Index = () => {
   //{userId,date,type,status,displayPicture,data};
   const [data, setData] = useState([]); //append new messages in this data
   const [keys, setKeys] = useState([]); //users ids will be stored in this state
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   //this use effect will run when new messages will come
 
   const findIndexOf = tempKey => {
@@ -58,6 +59,7 @@ const Index = () => {
         //tempAllUsers.push(newUser);
         //console.log('after pushing data: ', tempAllUsers);
       }
+      setIsDataLoaded(true);
       //console.log('all data: ', allData);
       //setData(oldData => [...oldData, allData]);
       //console.log('before pushing data: ', tempAllUsers);
@@ -80,10 +82,31 @@ const Index = () => {
     //notificationsContext.teacherUnread,
   ]);
   return (
-    <ResultComponent
-      dataList={data}
-      setData={setData}
-      selectedUser="teacher"></ResultComponent>
+    <>
+      {isDataLoaded && data.length != 0 && (
+        <ResultComponent
+          dataList={data}
+          setData={setData}
+          selectedUser="teacher"></ResultComponent>
+      )}
+      {isDataLoaded && data.length == 0 && (
+        <View style={{alignSelf: 'center', flex: 1}}>
+          No notifications for you
+        </View>
+      )}
+      {!isDataLoaded && (
+        <ActivityIndicator
+          color="pink"
+          size={100}
+          style={{
+            alignSelf: 'center',
+            marginBottom: 30,
+            height: '20%',
+            width: '20%',
+          }}
+        />
+      )}
+    </>
   );
   //return <Text>I'm screen</Text>;
 };

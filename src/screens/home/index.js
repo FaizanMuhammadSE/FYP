@@ -15,6 +15,7 @@ import {
   PermissionsAndroid,
   Vibration,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Dialog from 'react-native-dialog';
@@ -68,6 +69,7 @@ const Index = ({navigation, route}) => {
   const {userName, picture} = route.params; //these parameters are navigated to this screen
   // const messages = useRef({});
   const notificationsContext = useContext(NotificationsContext);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const manageLocation = location => {
     firestore()
@@ -344,6 +346,7 @@ const Index = ({navigation, route}) => {
     } catch (error) {
       err => console.log('Document Reference Error:', err);
     }
+    setIsDataLoaded(true);
   };
   const deleteImage = async () => {
     const fileName = getUserId() + '/' + 'dp';
@@ -516,22 +519,7 @@ const Index = ({navigation, route}) => {
   }, []);
 
   useEffect(() => {
-    //console.log('useEffect one', filePath);
-    //console.log('Routing Values to the HOme screen:', userName, picture);
     checkingFirstVisitAndSettingAccount();
-    //extracting image from database
-    // storage()
-    //   .ref(getUserId() + '/dp')
-    //   .getDownloadURL()
-    //   .then(url => {
-    //     console.log('URL is:', url);
-    //     setFilePath(url); //setting this state will run useEffect associated with filePath and will upload image uselessly but thats fine
-    //   })
-    //   .catch(err => console.log('Err WHILE getting url:', err.code));
-    //
-    // RNFS.exists('../../res/local_storage.txt').then(status =>
-    //   console.log(status),
-    //);
   }, []);
 
   //it will run on componentDidMount and whenever image is changed by user, we will update it in database
@@ -615,78 +603,94 @@ const Index = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
 
-          <View style={{height: '20%'}}>
-            <View
+          {!isDataLoaded && (
+            <ActivityIndicator
+              color="pink"
+              size={100}
               style={{
                 alignSelf: 'center',
-                borderRadius: 50,
-                height: 100,
-                width: 100,
-                backgroundColor: 'white',
-                elevation: 16,
-              }}>
-              <TouchableOpacity onPress={() => setImagePreview(true)}>
-                <Image
-                  borderRadius={50}
-                  source={
-                    filePath.includes('http') || filePath.includes('file:')
-                      ? {uri: filePath}
-                      : require('./../../res/images/no-image.jpg')
-                    // filePath.length == 0
-                    //   ? require('../../res/images/no-image.jpg')
-                    //   : {uri: filePath}
-                  }
-                  style={{height: 100, width: 100}}
-                />
-              </TouchableOpacity>
-            </View>
-            <Icon
-              style={{
-                alignSelf: 'center',
-                bottom: 30,
-                left: 30,
-                elevation: 16,
-                zIndex: 2,
-              }}
-              size={30}
-              color="#42EADDFF"
-              name="camera"
-              onPress={() => {
-                //chooseFile('photo');
-                setImageModal(true);
+                marginBottom: 30,
+                height: '20%',
+                width: '20%',
               }}
             />
-          </View>
-
-          <TouchableOpacity
-            style={{height: '20%'}}
-            onPress={() => {
-              setTempName(name);
-              showNameModal(true);
-            }}>
-            <Card
-              style={{
-                alignSelf: 'center',
-                flexDirection: 'row',
-                backgroundColor: '#42EADDFF',
-                justifyContent: 'center',
-                padding: 10,
-              }}
-              elevation={10}
-              cornerRadius={20}
-              opacity={0.2}>
-              <Text
-                numberOfLines={1}
+          )}
+          {isDataLoaded && (
+            <View style={{height: '20%'}}>
+              <View
                 style={{
-                  marginHorizontal: 15,
-                  fontFamily: 'Fascinate-Regular',
+                  alignSelf: 'center',
+                  borderRadius: 50,
+                  height: 100,
+                  width: 100,
+                  backgroundColor: 'white',
+                  elevation: 16,
                 }}>
-                {name}
-              </Text>
+                <TouchableOpacity onPress={() => setImagePreview(true)}>
+                  <Image
+                    borderRadius={50}
+                    source={
+                      filePath.includes('http') || filePath.includes('file:')
+                        ? {uri: filePath}
+                        : require('./../../res/images/no-image.jpg')
+                      // filePath.length == 0
+                      //   ? require('../../res/images/no-image.jpg')
+                      //   : {uri: filePath}
+                    }
+                    style={{height: 100, width: 100}}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Icon
+                style={{
+                  alignSelf: 'center',
+                  bottom: 30,
+                  left: 30,
+                  elevation: 16,
+                  zIndex: 2,
+                }}
+                size={30}
+                color="#42EADDFF"
+                name="camera"
+                onPress={() => {
+                  //chooseFile('photo');
+                  setImageModal(true);
+                }}
+              />
+            </View>
+          )}
 
-              <Icon style={{left: 0}} size={24} color="teal" name="eraser" />
-            </Card>
-          </TouchableOpacity>
+          {isDataLoaded && (
+            <TouchableOpacity
+              style={{height: '20%'}}
+              onPress={() => {
+                setTempName(name);
+                showNameModal(true);
+              }}>
+              <Card
+                style={{
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  backgroundColor: '#42EADDFF',
+                  justifyContent: 'center',
+                  padding: 10,
+                }}
+                elevation={10}
+                cornerRadius={20}
+                opacity={0.2}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    marginHorizontal: 15,
+                    fontFamily: 'Fascinate-Regular',
+                  }}>
+                  {name}
+                </Text>
+
+                <Icon style={{left: 0}} size={24} color="teal" name="eraser" />
+              </Card>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
             style={{

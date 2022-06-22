@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Button,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Card} from 'react-native-shadow-cards';
@@ -34,6 +35,7 @@ const Index = ({navigation, route}) => {
   } = route.params;
   const [dataForFlatList, setDataForFlatList] = useState([]);
   const resultantDataList = useRef([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const getUserId = () => {
     //in-progress
     return auth().currentUser.uid;
@@ -98,6 +100,7 @@ const Index = ({navigation, route}) => {
     }
     console.log('AFter preparing data here it is:', resultantDataList.current);
     setDataForFlatList(resultantDataList.current);
+    setIsDataLoaded(true);
     // result.forEach(item => {
     //   if (
     //     haversine(
@@ -345,7 +348,26 @@ const Index = ({navigation, route}) => {
         </Card>
       ) : null}
       {/* <Text>{dataForFlatList.length}</Text> */}
-      <FlatList data={dataForFlatList} renderItem={designItem}></FlatList>
+      {isDataLoaded && (
+        <FlatList data={dataForFlatList} renderItem={designItem}></FlatList>
+      )}
+      {isDataLoaded && dataForFlatList.length == 0 && (
+        <Text style={{alignSelf: 'center', fontSize: 20}}>
+          No Results Found
+        </Text>
+      )}
+      {!isDataLoaded && (
+        <ActivityIndicator
+          color="pink"
+          size={100}
+          style={{
+            alignSelf: 'center',
+            marginBottom: 30,
+            height: '20%',
+            width: '20%',
+          }}
+        />
+      )}
     </View>
   );
 };
